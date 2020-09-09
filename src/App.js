@@ -50,7 +50,8 @@ function App() {
         name: '',
         email: '',
         photo: '',
-        error: ''
+        error: '',
+        success: false
       }
       setUser(signOutUser);
     } catch (error) {
@@ -75,19 +76,22 @@ function App() {
   //   console.log(errorCode, errorMessage)
   // }
 
-
+  // This method you have write this type 
   const handleSubmit = (e) => {
 
     if (user.email && user.password) {
       firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
         .then(res => {
+          const newUser = { ...user };
+          newUser.error = ''
+          newUser.success = true;
+          setUser(newUser)
           console.log(res);
         }).catch(error => {
           const newUser = { ...user };
           newUser.error = error.message;
+          newUser.success = false;
           setUser(newUser)
-          // ...
-          // console.log(errorCode, errorMessage)
         })
     }
     e.preventDefault();
@@ -138,6 +142,7 @@ function App() {
         <input type="submit" value="Submit" />
       </form>
       <p style={{ color: 'red' }}>  {user.error} </p>
+      {user.success && <p style={{ color: 'green' }}>  Thanks for your valuable information </p>}
     </div>
   );
 }
