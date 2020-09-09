@@ -155,7 +155,7 @@ function App() {
         <input type="email" name='email' onBlur={handleChange} placeholder="Your email address" required /> <br />
         <input type="password" name="password" onBlur={handleChange} placeholder="Your password" required />
         <br />
-        <input type="submit" value="Submit" />
+        <input type="submit" value={newUserInfo ? 'Sign up' : 'Sing In'} />
       </form>
       <p style={{ color: 'red' }}>  {user.error} </p>
       {user.success && <p style={{ color: 'green' }}>  User {newUserInfo ? 'created' : 'Logged In'} successfully </p>}
