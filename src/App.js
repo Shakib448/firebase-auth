@@ -15,7 +15,8 @@ function App() {
     name: '',
     email: '',
     photo: '',
-    password: ''
+    password: '',
+    error: ''
   })
 
   const handleSingIn = async () => {
@@ -48,20 +49,46 @@ function App() {
         isSignedIn: false,
         name: '',
         email: '',
-        photo: ''
+        photo: '',
+        error: ''
       }
       setUser(signOutUser);
     } catch (error) {
       console.log(error)
     }
   }
+  // firebase.auth().createUserWithEmailAndPassword(user.email, user.password).catch(function (error) {
+  //   // Handle Errors here.
+  //   const errorCode = error.code;
+  //   const errorMessage = error.message;
+  //   // ...
+  //   console.log(errorCode, errorMessage)
+  // });
+
+
+  // try {
+  //   firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
+  // } catch (error) {
+  //   const errorCode = error.code;
+  //   const errorMessage = error.message;
+  //   // ...
+  //   console.log(errorCode, errorMessage)
+  // }
 
 
   const handleSubmit = (e) => {
-    console.log(user.email, user.password)
 
     if (user.email && user.password) {
-      console.log("Submitting")
+      firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
+        .then(res => {
+          console.log(res);
+        }).catch(error => {
+          const newUser = { ...user };
+          newUser.error = error.message;
+          setUser(newUser)
+          // ...
+          // console.log(errorCode, errorMessage)
+        })
     }
     e.preventDefault();
   }
@@ -110,7 +137,7 @@ function App() {
         <br />
         <input type="submit" value="Submit" />
       </form>
-
+      <p style={{ color: 'red' }}>  {user.error} </p>
     </div>
   );
 }
