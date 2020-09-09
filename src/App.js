@@ -72,6 +72,7 @@ function App() {
           newUser.success = true;
           setUser(newUser)
           console.log(res);
+          updateUserName(user.name)
         }).catch(error => {
           const newUser = { ...user };
           newUser.error = error.message;
@@ -97,6 +98,18 @@ function App() {
 
     }
     e.preventDefault();
+  }
+
+  const updateUserName = name => {
+    const user = firebase.auth().currentUser;
+
+    user.updateProfile({
+      displayName: name,
+    }).then(res => {
+      console.log("Update successful.")
+    }).catch(function (error) {
+      console.log("An error happened.")
+    });
   }
 
 
