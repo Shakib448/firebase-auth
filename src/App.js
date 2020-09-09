@@ -10,6 +10,8 @@ function App() {
 
   const provider = new firebase.auth.GoogleAuthProvider();
 
+  const [newUserInfo, setNewUserInfo] = useState(false)
+
   const [user, setUser] = useState({
     isSignedIn: false,
     name: '',
@@ -58,28 +60,11 @@ function App() {
       console.log(error)
     }
   }
-  // firebase.auth().createUserWithEmailAndPassword(user.email, user.password).catch(function (error) {
-  //   // Handle Errors here.
-  //   const errorCode = error.code;
-  //   const errorMessage = error.message;
-  //   // ...
-  //   console.log(errorCode, errorMessage)
-  // });
-
-
-  // try {
-  //   firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
-  // } catch (error) {
-  //   const errorCode = error.code;
-  //   const errorMessage = error.message;
-  //   // ...
-  //   console.log(errorCode, errorMessage)
-  // }
 
   // This method you have write this type 
   const handleSubmit = (e) => {
 
-    if (user.email && user.password) {
+    if (newUserInfo && user.email && user.password) {
       firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
         .then(res => {
           const newUser = { ...user };
@@ -93,6 +78,23 @@ function App() {
           newUser.success = false;
           setUser(newUser)
         })
+    }
+
+    if (!newUserInfo && user.email && user.password) {
+      firebase.auth().signInWithEmailAndPassword(user.email, user.password)
+        .then(res => {
+          const newUser = { ...user };
+          newUser.error = ''
+          newUser.success = true;
+          setUser(newUser)
+          console.log(res);
+        }).catch(error => {
+          const newUser = { ...user };
+          newUser.error = error.message;
+          newUser.success = false;
+          setUser(newUser)
+        })
+
     }
     e.preventDefault();
   }
@@ -133,16 +135,17 @@ function App() {
       }
 
       <h1>Our Won Authentication </h1>
-
+      <input type="checkbox" onChange={() => setNewUserInfo(!newUserInfo)} name="newUserInfo" id="" />
+      <label htmlFor="newUserInfo">New User Sign Up</label>
       <form onSubmit={handleSubmit}>
-        <input type="text" name='name' placeholder="name" onBlur={handleChange} required /> <br />
+        {newUserInfo && <input type="text" name='name' placeholder="name" onBlur={handleChange} required />} <br />
         <input type="email" name='email' onBlur={handleChange} placeholder="Your email address" required /> <br />
         <input type="password" name="password" onBlur={handleChange} placeholder="Your password" required />
         <br />
         <input type="submit" value="Submit" />
       </form>
       <p style={{ color: 'red' }}>  {user.error} </p>
-      {user.success && <p style={{ color: 'green' }}>  Thanks for your valuable information </p>}
+      {user.success && <p style={{ color: 'green' }}>  User {newUserInfo ? 'created' : 'Logged In'} successfully </p>}
     </div>
   );
 }
