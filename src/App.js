@@ -146,6 +146,8 @@ function App() {
           <img src={user.photo} alt="" />
         </div>
       }
+      <br />
+
 
       <h1>Our Won Authentication </h1>
       <input type="checkbox" onChange={() => setNewUserInfo(!newUserInfo)} name="newUserInfo" id="" />
